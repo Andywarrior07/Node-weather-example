@@ -1,7 +1,9 @@
+const fs = require('fs');
 const axios = require('axios');
 
 class Searches {
-  record = [];
+  records = [];
+  dbPath = './db/database.json';
 
   constructor() {}
 
@@ -61,6 +63,22 @@ class Searches {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  saveHistory(place) {
+    if (this.records.includes(place.toLowerCase())) {
+      return;
+    }
+
+    this.records.unshift(place.toLowerCase());
+    this.saveDB();
+  }
+
+  saveDB() {
+    const payload = {
+      records: this.records,
+    };
+    fs.writeFileSync(this.dbPath, JSON.stringify(payload));
   }
 }
 
